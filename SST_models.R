@@ -99,33 +99,17 @@ df_long$Temp_version <- factor(df_long$Temp_version, levels = c("NoTemp", "r1", 
                                labels = c("Baseline", "r1", "r2", 
                                           "r3", "K1", "K2"))
 
+my_colors <- c("#000000", "#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00")
+
+
 ggplot(df_long, aes(x=time, y=Population, col=Temp_version)) +
   geom_line(lwd=1, position=position_dodge(width=0.2)) +
-  scale_color_viridis_d(name = "Model version")+
+  scale_color_manual(values = my_colors, name = "Model version") + 
   theme_minimal() +
-  #ggtitle("A.") +
   theme(text = element_text(size=20), legend.position = "top") +
   labs(x = "Years", y = bquote("Fish biomass"~(g/m^2)))
 
 
-#zoomed in
-p2<-ggplot(df_long %>% filter(time > 15 & time < 25), aes(x=time, y=Population, col=Temp_version)) +
-  geom_line(lwd=1, position=position_dodge(width=0.2)) +
-  scale_color_viridis_d(name = "Model version")+
-  theme_minimal() +
-  ggtitle("B.") +
-  theme(text = element_text(size=20), legend.position = "top") +
-  labs(x = "Years", y = bquote("Fish biomass"~(g/m^2)))
 
-
-var_size = c('var1'=2, 'var2'=1)
-
-
-figure<-ggarrange(p1  + rremove("xlab"),p2+rremove("ylab") + rremove("xlab"),nrow=1, common.legend = TRUE, legend = "top")
-
-#figure + guides(linetype = guide_legend(override.aes = list(size = 2)))
-
-annotate_figure(figure, bottom = text_grob("Years",
-                                           size = 20))
 
 

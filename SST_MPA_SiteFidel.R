@@ -406,15 +406,15 @@ outcome_combined_long$model_version <- factor(outcome_combined_long$model_versio
                                                          "r3", "K1", "K2"))
 
 #Total Stock - Relative
-ggplot(outcome_combined_long %>%
-             filter(S == 0 | S == 0.5 | S == 0.8),
-           aes(x = area_mpa, y = rel_biomass, col = model_version)) +
+my_colors <- c("#000000", "#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00")
+
+ggplot(outcome_combined_long,
+       aes(x = area_mpa, y = rel_biomass, col = model_version)) +
   geom_line(lwd=0.75) +
   facet_wrap(~S, scales="free") +
-  scale_color_viridis_d(name="Model version") +
-  labs(x = "MPA area (proportion)", y = "Relative biomass") +
+  scale_color_manual(values = my_colors, name = "Model version") + 
+  labs(x = "Spatial closure area (proportion)", y = "Relative biomass") +
   theme_minimal() +
-  ggtitle("A.")+
   theme(text = element_text(size=20), legend.position = "bottom") +
   scale_x_continuous(breaks=c(0, 0.25, 0.5, 0.75, 1),
                      labels = c("0", "0.25", "0.5", "0.75", "1"))
@@ -448,101 +448,15 @@ outcome_harvest_long$model_version <- factor(outcome_harvest_long$model_version,
                                              labels = c("Baseline", "r1", "r2", 
                                                         "r3", "K1", "K2"))
 
-ggplot(outcome_harvest_long %>%
-             filter(S == 0.1 | S == 0.5 | S == 0.9),
+ggplot(outcome_harvest_long,
            aes(x = area_mpa, y = rel_harvest, col = model_version)) +
   geom_line(lwd=0.75) +
   facet_wrap(~S, scales="free") +
-  scale_color_viridis_d(name="Model version") +
-  labs(x = "MPA area (proportion)", y = "Relative harvest") +
+  scale_color_manual(values = my_colors, name = "Model version") + 
+  labs(x = "Spatial closure area (proportion)", y = "Relative harvest") +
   theme_minimal() +
-  ggtitle("B.") +
   theme(text = element_text(size=20), legend.position = "bottom") +
   scale_x_continuous(breaks=c(0, 0.25, 0.5, 0.75, 1),
                      labels = c("0", "0.25", "0.5", "0.75", "1"))
 
 
-
-figure<-ggarrange(p1+rremove("xlab"), p2+rremove("xlab"), 
-                  nrow=2, ncol=1, common.legend = TRUE, legend = "top")
-
-annotate_figure(figure, bottom = text_grob("MPA area (proportion)",
-                                           size = 20))
-
-
-
-
-
-
-
-
-
-
-
-##not in paper - looking at individual patch populations just for fun
-outcome <- cbind(parameter_grid, outcome_population, outcome_population_r1, outcome_population_r2, outcome_population_r3,
-                 outcome_population_K1, outcome_population_K2)
-
-outcome$area_open <- map_dbl(outcome$patch_area, 1)
-outcome$area_mpa <- map_dbl(outcome$patch_area, 2)
-
-
-outcome_long <- pivot_longer(outcome, open_fish_notemp:mpa_fish_K2, names_to = "model_version",
-                             values_to = "population")
-
-
-
-#patch 1 fish only
-outcome_long_open <- outcome_long %>%
-  filter(model_version == "open_fish_notemp" |
-           model_version == "open_fish_r1" |
-           model_version == "open_fish_r2" |
-           model_version == "open_fish_r3" |
-           model_version == "open_fish_K1" |
-           model_version == "open_fish_K2"
-  )
-
-outcome_long_open$model_version <- factor(outcome_long_open$model_version, 
-                                          levels = c("open_fish_notemp", "open_fish_r1", "open_fish_r2", 
-                                                     "open_fish_r3", "open_fish_K1", "open_fish_K2"),
-                                          labels = c("Baseline", "r1", "r2", 
-                                                     "r3", "K1", "K2"))
-
-ggplot(outcome_long_open, aes(x = area_mpa, y = population, col = model_version)) +
-  geom_line() +
-  facet_wrap(~S, scales="free") +
-  scale_color_viridis_d(name = "Model version") +
-  labs(x = "MPA area (proportion)", y = bquote("Open area fish biomass"~(g/m^2))) +
-  theme_minimal() +
-  ggtitle("Site fidelity") +
-  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5), legend.position = "bottom") +
-  scale_x_continuous(breaks=c(0, 0.25, 0.5, 0.75, 1),
-                     labels = c("0", "0.25", "0.5", "0.75", "1"))
-
-
-#patch 2 only
-outcome_long_mpa <- outcome_long %>%
-  filter(model_version == "mpa_fish_notemp" |
-           model_version == "mpa_fish_r1" |
-           model_version == "mpa_fish_r2" |
-           model_version == "mpa_fish_r3" |
-           model_version == "mpa_fish_K1" |
-           model_version == "mpa_fish_K2"
-  )
-
-outcome_long_mpa$model_version <- factor(outcome_long_mpa$model_version, 
-                                         levels = c("mpa_fish_notemp", "mpa_fish_r1", "mpa_fish_r2", 
-                                                    "mpa_fish_r3", "mpa_fish_K1", "mpa_fish_K2"),
-                                         labels = c("Baseline", "r1", "r2", 
-                                                    "r3", "K1", "K2"))
-
-ggplot(outcome_long_mpa, aes(x = area_mpa, y = population, col = model_version)) +
-  geom_line() +
-  facet_wrap(~S, scales="free") +
-  scale_color_viridis_d(name = "Model version") +
-  labs(x = "MPA area (proportion)", y = bquote("MPA area fish biomass"~(g/m^2))) +
-  theme_minimal() +
-  ggtitle("Site fidelity") +
-  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5), legend.position = "bottom") +
-  scale_x_continuous(breaks=c(0, 0.25, 0.5, 0.75, 1),
-                     labels = c("0", "0.25", "0.5", "0.75", "1"))

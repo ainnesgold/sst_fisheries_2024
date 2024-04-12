@@ -459,18 +459,21 @@ outcome_harvest_long$model_version <- factor(outcome_harvest_long$model_version,
 
 
 #First exploring no MPA, just varied fishing effort
+my_colors <- c("#000000", "#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00")
+
 
 #this is figure 3
-p1<-ggplot(outcome_combined_long %>% filter(area_mpa == 0), aes(x=fishing_p1, y = rel_biomass, color=model_version)) +
-  geom_line(lwd=0.75) +
-  scale_color_brewer(palette = "Set1", name = "Model version") + 
+p1 <- ggplot(outcome_combined_long %>% filter(area_mpa == 0), aes(x = fishing_p1, y = rel_biomass, color = model_version)) +
+  geom_line(lwd = 0.75) +
+  scale_color_manual(values = my_colors, name = "Model version") + 
   labs(x = "Fishing effort", y = "Relative biomass") +
   theme_minimal() +
-  theme(text = element_text(size=20), legend.position = "bottom")
+  theme(text = element_text(size = 20), legend.position = "bottom")
+
 
 p2<-ggplot(outcome_harvest_long %>% filter(area_mpa == 0), aes(x=fishing_p1, y = rel_harvest, color=model_version)) +
   geom_line(lwd=0.75) +
-  scale_color_brewer(palette = "Set1", name = "Model version") + 
+  scale_color_manual(values = my_colors, name = "Model version") + 
   labs(x = "Fishing effort", y = "Relative harvest") +
   theme_minimal() +
   theme(text = element_text(size=20), legend.position = "bottom")
@@ -489,10 +492,10 @@ outcome_harvest_long <- outcome_harvest_long %>%
 
 
 # Define custom labels for the facets
-custom_labels <- c(`0.05` = "5% MPA",
-                   `0.1` = "10% MPA",
-                   `0.3` = "30% MPA",
-                   `0.5` = "50% MPA")
+custom_labels <- c(`0.05` = "5% spatial closure",
+                   `0.1` = "10% spatial closure",
+                   `0.3` = "30% spatial closure",
+                   `0.5` = "50% spatial closure")
 
 
 #this is figure 4
@@ -501,7 +504,7 @@ ggplot(outcome_combined_long %>%
        aes(x = fishing_p1, y = rel_biomass, col = model_version)) +
   geom_line(lwd=0.75) +
   facet_wrap(~area_mpa, labeller = labeller(area_mpa = custom_labels)) +  # Use custom labels
-  scale_color_brewer(palette = "Set1", name = "Model version") + 
+  scale_color_manual(values = my_colors, name = "Model version") + 
   labs(x = "Fishing effort", y = "Relative biomass") +
   theme_minimal() +
   theme(text = element_text(size=20), legend.position = "bottom") +
@@ -515,7 +518,7 @@ ggplot(outcome_harvest_long %>%
        aes(x = fishing_p1, y = rel_harvest, col = model_version)) +
   geom_line(lwd=0.75) +
   facet_wrap(~area_mpa, labeller = labeller(area_mpa = custom_labels)) +  # Use custom labels
-  scale_color_brewer(palette = "Set1", name = "Model version") + 
+  scale_color_manual(values = my_colors, name = "Model version") + 
   labs(x = "Fishing effort", y = "Relative harvest") +
   theme_minimal() +
   theme(text = element_text(size=20), legend.position = "bottom") +
