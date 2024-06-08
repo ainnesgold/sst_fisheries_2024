@@ -3,7 +3,7 @@
 source('SST_MPA_Fishing.R')
 
 #panel 1 in this script
-source('SST_MPA_Fishing_June2024.R')
+source('SST_MPA_Fishing_Relative_to_Baseline.R')
 
 
 ggarrange(p3, p1, p2, nrow=1, ncol=3, common.legend = TRUE) 

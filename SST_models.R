@@ -102,12 +102,15 @@ df_long$Temp_version <- factor(df_long$Temp_version, levels = c("NoTemp", "r1", 
 my_colors <- c("#000000", "#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00")
 
 
-ggplot(df_long, aes(x=time, y=Population, col=Temp_version)) +
+ggplot(df_long, aes(x=time, y=Population, col=Temp_version, linetype = Temp_version)) +
   geom_line(lwd=1, position=position_dodge(width=0.2)) +
   scale_color_manual(values = my_colors, name = "Model version") + 
+  scale_linetype_manual(values = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"), name = "Model version") +
   theme_minimal() +
   theme(text = element_text(size=20), legend.position = "top") +
-  labs(x = "Years", y = bquote("Fish biomass"~(g/m^2)))
+  labs(x = "Years", y = bquote("Fish biomass"~(g/m^2))) +
+  guides(color = guide_legend(override.aes = list(linetype = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"))),
+         linetype = guide_legend(override.aes = list(color = my_colors)))
 
 
 

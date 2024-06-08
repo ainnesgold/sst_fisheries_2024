@@ -1,11 +1,12 @@
-##Thermal effects x Mgt strategies
+##Thermal effects x Fishing x spatial closure
+#Results relative to optimal nonspatial management scenario (see MSY_Calculations.R)
 
 library(tidyverse)
 library(ggpubr)
 library(RColorBrewer)
 
 source('dispersal_fn.R')
-source('MSY_Calculations_June2024.R')
+source('MSY_Calculations.R')
 
 projections <- read.csv("anomaly_df.csv")
 SST_dev <- projections[['anomaly']]
@@ -363,17 +364,8 @@ outcome_harvest$fishing_p2 <- map_dbl(outcome_harvest$fishing_effort, 2)
 
 
 #RELATIVE TO OPTIMAL VALUES
-#optimal nonspatial would be MPA = 0 and fishing at MSY
-
-#from testingmsy.R
-optimal_fishing_effort = 0.14
-optimal_biomass = 5.047030e+01
-optimal_harvest = 7.584363e+00
-optimal_CPUE = 7.584363e+00 / 0.14
 
 #######################. BIOMASS. ##################################
-#optimal_biomass <- outcome %>% filter(area_mpa == 0 & fishing_p1 == optimal_fishing_effort) %>%
-# summarize(open_fish_notemp, open_fish_r1, open_fish_r2, open_fish_r3, open_fish_K1, open_fish_K2)
 
 biomass_mapping <- data.frame(
   fishing_p1 = unique(outcome$fishing_p1)
@@ -400,14 +392,7 @@ outcome_combined <- outcome_index %>%
   select(combined_fish_notemp, combined_fish_r1, combined_fish_r2, combined_fish_r3, combined_fish_K1, combined_fish_K2,
          optimal_biomass, fishing_p1, area_mpa)
 
-#outcome_combined$rel_biomass_notemp <- outcome_combined$combined_fish_notemp / outcome_combined$optimal_biomass
-#outcome_combined$rel_biomass_r1 <- outcome_combined$combined_fish_r1 / outcome_combined$optimal_biomass
-#outcome_combined$rel_biomass_r2 <- outcome_combined$combined_fish_r2 / outcome_combined$optimal_biomass
-#outcome_combined$rel_biomass_r3 <- outcome_combined$combined_fish_r3 / outcome_combined$optimal_biomass
-#outcome_combined$rel_biomass_K1 <- outcome_combined$combined_fish_K1 / outcome_combined$optimal_biomass
-#outcome_combined$rel_biomass_K2 <- outcome_combined$combined_fish_K2 / outcome_combined$optimal_biomass
-
-#alternative relative bioomass calculations
+#alternative relative biomass calculations
 outcome_combined$rel_biomass_notemp <- outcome_combined$combined_fish_notemp / population_at_max_harvest
 outcome_combined$rel_biomass_r1 <- outcome_combined$combined_fish_r1 / population_at_max_harvest_r1
 outcome_combined$rel_biomass_r2 <- outcome_combined$combined_fish_r2 / population_at_max_harvest_r2
@@ -445,13 +430,6 @@ outcome_harvest_2 <- outcome_harvest_index %>%
          open_harvest_K1, open_harvest_K2,
          optimal_harvest,
          fishing_p1, area_mpa)
-
-#outcome_harvest_2$rel_open_harvest_notemp <- outcome_harvest_2$open_harvest_notemp / outcome_harvest_2$optimal_harvest
-#outcome_harvest_2$rel_open_harvest_r1 <- outcome_harvest_2$open_harvest_r1 / outcome_harvest_2$optimal_harvest
-#outcome_harvest_2$rel_open_harvest_r2 <- outcome_harvest_2$open_harvest_r2 / outcome_harvest_2$optimal_harvest
-#outcome_harvest_2$rel_open_harvest_r3 <- outcome_harvest_2$open_harvest_r3 / outcome_harvest_2$optimal_harvest
-#outcome_harvest_2$rel_open_harvest_K1 <- outcome_harvest_2$open_harvest_K1 / outcome_harvest_2$optimal_harvest
-#outcome_harvest_2$rel_open_harvest_K2 <- outcome_harvest_2$open_harvest_K2 / outcome_harvest_2$optimal_harvest
 
 outcome_harvest_2$rel_open_harvest_notemp <- outcome_harvest_2$open_harvest_notemp / max_harvest
 outcome_harvest_2$rel_open_harvest_r1 <- outcome_harvest_2$open_harvest_r1 / max_harvest_r1
@@ -523,7 +501,7 @@ custom_labels <- c(`0.05` = "5% spatial closure",
                    `0.5` = "50% spatial closure")
 
 
-#this is figure 4
+#this is figure SX
 ggplot(outcome_combined_long %>%
          filter(area_mpa %in% c(0.05, 0.1, 0.3, 0.5)),
        aes(x = fishing_p1, y = rel_biomass, col = model_version, linetype = model_version)) +

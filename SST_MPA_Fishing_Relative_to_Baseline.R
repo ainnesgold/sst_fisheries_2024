@@ -1,4 +1,5 @@
-##Thermal effects x Mgt strategies
+##Thermal effects x Fishing x spatial closure
+#Results relative to baseline model
 
 library(tidyverse)
 library(ggpubr)

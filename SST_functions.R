@@ -22,14 +22,15 @@ par(mar = c(5, 5, 4, 2) + 0.1)  # Adjust the values as needed
 curve(quad_r, from = -10, to = 10, xlab = "Anomaly (°C)", ylab = "Intrinsic growth rate", 
       col = 1, cex.lab = 1.5, cex.axis = 1.5, cex.main = 1.5, lwd = 2)
 
-curve(quad_r, from = -10, to = 10, xlab="Anomaly (°C)", ylab = "", col="#E41A1C", lwd = 2)
-curve(quad_r2, from = -10, to = 10, add = TRUE, col="#377EB8", lwd = 2)
-curve(quad_r3, from = -10, to = 10, add = TRUE, col="#4DAF4A", lwd = 2)
+curve(quad_r, from = -10, to = 10, xlab="Anomaly (°C)", ylab = "", col="#E41A1C", lty = "dashed", lwd = 4)
+curve(quad_r2, from = -10, to = 10, add = TRUE, col="#377EB8", lty = "dotted", lwd = 4)
+curve(quad_r3, from = -10, to = 10, add = TRUE, col="#4DAF4A", lty = "dotdash", lwd = 4)
 title(ylab= "Intrinsic growth rate", line=2, cex.lab=1.2)
-legend("topright", legend=c("r1", "r2", "r3"), col=c("#E41A1C", "#377EB8", "#4DAF4A"), lty=1, cex=1, text.width = 2, lwd = 2)
+legend("topright", legend=c("r1", "r2", "r3"), col=c("#E41A1C", "#377EB8", "#4DAF4A"), lty=c("dashed", "dotted", "dotdash"), cex=1, text.width = 2, lwd = 4)
 
 
-
+scale_linetype_manual(values = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"), name = "Model version") +
+  
 
 
 
@@ -78,15 +79,15 @@ y_values <- sapply(x_values, restricted_y)
 # Plot the function
 par(mar = c(5, 5, 4, 2) + 0.1)
 
-plot(x_values, y_values, type = "l", col = "#984EA3", lwd = 2, cex.lab=1.2,
+plot(x_values, y_values, type = "l", col = "#984EA3", lty="longdash", lwd = 4, cex.lab=1.2,
      xlab = "Anomaly (°C)", ylab = bquote('Carrying capacity'~(g/m^2)))
 
 # Add the quad_K plot on top of the restricted_y plot
 # Plot the quad_K function
-curve(quad_K, from = -20, to = 20, add=TRUE, col = "#FF7F00", lwd = 2)
+curve(quad_K, from = -20, to = 20, add=TRUE, col = "#FF7F00", lty = "twodash", lwd = 4)
 
 # Add a legend
-legend("topright", legend = c("K1", "K2"), col = c("#984EA3", "#FF7F00"), lwd = 2)
+legend("topright", legend = c("K1", "K2"), col = c("#984EA3", "#FF7F00"), lty = c("longdash", "twodash"), lwd = 4)
 
 
-
+  
