@@ -1,6 +1,4 @@
-##Thermal effects x Fishing x spatial closure
-#Results relative to optimal nonspatial management scenario (see MSY_Calculations.R)
-
+#To make supplemental figure of r and K over time
 library(tidyverse)
 library(ggpubr)
 library(RColorBrewer)
@@ -17,13 +15,13 @@ K = c(101.3, 101.3)
 S = 0.5
 
 
-patch_area_sequences <- list(seq(0, 1, by = 0.05))
+patch_area_sequences <- list(seq(1, 1, by = 1))
 patch_area_grid <- do.call(expand.grid, patch_area_sequences)
 patch_area_grid$Var2 <- 1 - patch_area_grid$Var1
 patch_area_list <- split(patch_area_grid, 1:nrow(patch_area_grid))
 number_patches <- ncol(patch_area_grid)
 
-fishing_effort_sequences <- list(seq(0, 0.5, by = 0.01), 0)
+fishing_effort_sequences <- list(seq(0.16, 0.16, by = 0.16), 0)
 fishing_effort_grid <- do.call(expand.grid, fishing_effort_sequences)
 fishing_effort_list <- split(fishing_effort_grid, 1:nrow(fishing_effort_grid))
 catchability <- 1
@@ -453,104 +451,44 @@ outcome_harvest_long$model_version <- factor(outcome_harvest_long$model_version,
                                                         "r3", "K1", "K2"))
 
 
-#First exploring no MPA, just varied fishing effort
-my_colors <- c("#000000", "#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00")
 
 
-#this is figure 3
-p1 <- ggplot(outcome_combined_long %>% filter(area_mpa == 0), aes(x = fishing_p1, y = rel_biomass, color = model_version, linetype = model_version)) +
+
+rk_data <- data.frame(r_temp_1, r_temp_2, r_temp_3, K_temp_1, K_temp_2, projections)
+rk_data <- pivot_longer(rk_data, r_temp_1:K_temp_2, names_to = "model_version", values_to = "value")
+
+rk_data$model_version <- factor(rk_data$model_version, 
+                                             levels = c("r_temp_1", "r_temp_2", "r_temp_3", 
+                                                        "K_temp_1", "K_temp_2"),
+                                             labels = c("r1", "r2", 
+                                                        "r3", "K1", "K2"))
+
+
+K_plot<-ggplot(rk_data %>% filter(model_version == "K1" | model_version == "K2"), 
+       aes(x=year, y=value, color=model_version, linetype=model_version)) +
   geom_line(lwd = 1) +
-  scale_color_manual(values = my_colors, name = "Model version") + 
-  scale_linetype_manual(values = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"), name = "Model version") +
-  labs(x = "Fishing effort", y = "Biomass relative to optimal \nnonspatial management") +
+  scale_color_manual(values = c("#984EA3", "#FF7F00"), name = "Model version") + 
+  scale_linetype_manual(values = c("longdash", "twodash"), name = "Model version") +
+  labs(x = "Year", y = expression(Carrying~capacity~(g/m^2))) +
   theme_minimal() +
-  ggtitle("B.") +
   theme(text = element_text(size = 20), legend.position = "bottom") +
-  guides(color = guide_legend(override.aes = list(linetype = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"))),
-         linetype = guide_legend(override.aes = list(color = my_colors)))
+  guides(color = guide_legend(override.aes = list(linetype = c("longdash", "twodash"))),
+         linetype = guide_legend(override.aes = list(color = c("#984EA3", "#FF7F00"))))+
+  geom_hline(yintercept = 101.3, color = "black", linetype = "solid", size = 1)
 
 
-p2<-ggplot(outcome_harvest_long %>% filter(area_mpa == 0), aes(x=fishing_p1, y = rel_harvest, color=model_version, linetype = model_version)) +
-  geom_line(lwd=1) +
-  scale_color_manual(values = my_colors, name = "Model version") + 
-  scale_linetype_manual(values = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"), name = "Model version") +
-  labs(x = "Fishing effort", y = "Harvest relative to optimal \nnonspatial management") +
+r_plot<-ggplot(rk_data %>% filter(model_version == "r1" | model_version == "r2" | model_version == "r3"), 
+               aes(x=year, y=value, color=model_version, linetype=model_version)) +
+  geom_line(lwd = 1) +
+  scale_color_manual(values = c("#E41A1C", "#377EB8", "#4DAF4A"), name = "Model version") + 
+  scale_linetype_manual(values = c("dashed", "dotted", "dotdash"), name = "Model version") +
+  labs(x = "Year", y = "Instrinsic growth rate") +
   theme_minimal() +
-  ggtitle("C.") +
-  theme(text = element_text(size=20), legend.position = "bottom") +
-  guides(color = guide_legend(override.aes = list(linetype = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"))),
-         linetype = guide_legend(override.aes = list(color = my_colors)))
+  theme(text = element_text(size = 20), legend.position = "bottom") +
+  guides(color = guide_legend(override.aes = list(linetype = c("dashed", "dotted", "dotdash"))),
+         linetype = guide_legend(override.aes = list(color = c("#E41A1C", "#377EB8", "#4DAF4A")))) +
+  geom_hline(yintercept = 0.3, color = "black", linetype = "solid", size = 1)
 
-ggarrange(p1, p2, nrow=1, ncol=2, common.legend = TRUE) # 8 x 4
-
-
-#now with MPAs
-
-##Fishing effort is X axis, facetted by MPA level
-outcome_combined_long <- outcome_combined_long %>% 
-  mutate(area_mpa = round(area_mpa, 2))
-
-outcome_harvest_long <- outcome_harvest_long %>% 
-  mutate(area_mpa = round(area_mpa, 2))
-
-
-# Define custom labels for the facets
-custom_labels <- c(`0.05` = "5% spatial closure",
-                   `0.1` = "10% spatial closure",
-                   `0.3` = "30% spatial closure",
-                   `0.5` = "50% spatial closure")
-
-
-#this is figure S4
-ggplot(outcome_combined_long %>%
-         filter(area_mpa %in% c(0.05, 0.1, 0.3, 0.5)),
-       aes(x = fishing_p1, y = rel_biomass, col = model_version, linetype = model_version)) +
-  geom_smooth(se = FALSE, lwd = 1) + 
-  facet_wrap(~area_mpa, labeller = labeller(area_mpa = custom_labels)) +  # Use custom labels
-  scale_color_manual(values = my_colors, name = "Model version") + 
-  scale_linetype_manual(values = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"), name = "Model version") +
-  labs(x = "Fishing effort", y = "Biomass relative to optimal nonspatial management") +
-  theme_minimal() +
-  theme(text = element_text(size=20), legend.position = "bottom") +
-  theme(plot.title = element_text(hjust = 0.5), text = element_text(size=20), legend.position = "bottom") +
-  guides(color = guide_legend(override.aes = list(linetype = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"))),
-         linetype = guide_legend(override.aes = list(color = my_colors))) #save 8x8
-
-
-
-#this is figure 5
-ggplot(outcome_harvest_long %>%
-         filter(area_mpa %in% c(0.05, 0.1, 0.3, 0.5)),
-       aes(x = fishing_p1, y = rel_harvest, col = model_version, linetype = model_version)) +
-  geom_smooth(se = FALSE, lwd = 1) + 
-  facet_wrap(~area_mpa, labeller = labeller(area_mpa = custom_labels)) +  # Use custom labels
-  scale_color_manual(values = my_colors, name = "Model version") + 
-  scale_linetype_manual(values = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"), name = "Model version") +
-  labs(x = "Fishing effort", y = "Harvest relative to optimal nonspatial management") +
-  theme_minimal() +
-  theme(text = element_text(size=20), legend.position = "bottom") +
-  theme(plot.title = element_text(hjust = 0.5), text = element_text(size=20), legend.position = "bottom") +
-  guides(color = guide_legend(override.aes = list(linetype = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"))),
-         linetype = guide_legend(override.aes = list(color = my_colors))) #save 8x8
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ggarrange(r_plot, K_plot, nrow=1, ncol=2)
 
 
