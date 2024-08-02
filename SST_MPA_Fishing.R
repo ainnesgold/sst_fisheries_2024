@@ -394,11 +394,11 @@ outcome_combined <- outcome_index %>%
 
 #alternative relative biomass calculations
 outcome_combined$rel_biomass_notemp <- outcome_combined$combined_fish_notemp / population_at_max_harvest
-outcome_combined$rel_biomass_r1 <- outcome_combined$combined_fish_r1 / population_at_max_harvest_r1
-outcome_combined$rel_biomass_r2 <- outcome_combined$combined_fish_r2 / population_at_max_harvest_r2
-outcome_combined$rel_biomass_r3 <- outcome_combined$combined_fish_r3 / population_at_max_harvest_r3
-outcome_combined$rel_biomass_K1 <- outcome_combined$combined_fish_K1 / population_at_max_harvest_K1
-outcome_combined$rel_biomass_K2 <- outcome_combined$combined_fish_K2 / population_at_max_harvest_K2
+outcome_combined$rel_biomass_r1 <- outcome_combined$combined_fish_r1 / population_at_max_harvest
+outcome_combined$rel_biomass_r2 <- outcome_combined$combined_fish_r2 / population_at_max_harvest
+outcome_combined$rel_biomass_r3 <- outcome_combined$combined_fish_r3 / population_at_max_harvest
+outcome_combined$rel_biomass_K1 <- outcome_combined$combined_fish_K1 / population_at_max_harvest
+outcome_combined$rel_biomass_K2 <- outcome_combined$combined_fish_K2 / population_at_max_harvest
 
 
 outcome_combined <- outcome_combined %>%
@@ -432,11 +432,11 @@ outcome_harvest_2 <- outcome_harvest_index %>%
          fishing_p1, area_mpa)
 
 outcome_harvest_2$rel_open_harvest_notemp <- outcome_harvest_2$open_harvest_notemp / max_harvest
-outcome_harvest_2$rel_open_harvest_r1 <- outcome_harvest_2$open_harvest_r1 / max_harvest_r1
-outcome_harvest_2$rel_open_harvest_r2 <- outcome_harvest_2$open_harvest_r2 / max_harvest_r2
-outcome_harvest_2$rel_open_harvest_r3 <- outcome_harvest_2$open_harvest_r3 / max_harvest_r3
-outcome_harvest_2$rel_open_harvest_K1 <- outcome_harvest_2$open_harvest_K1 / max_harvest_K1
-outcome_harvest_2$rel_open_harvest_K2 <- outcome_harvest_2$open_harvest_K2 / max_harvest_K2
+outcome_harvest_2$rel_open_harvest_r1 <- outcome_harvest_2$open_harvest_r1 / max_harvest
+outcome_harvest_2$rel_open_harvest_r2 <- outcome_harvest_2$open_harvest_r2 / max_harvest
+outcome_harvest_2$rel_open_harvest_r3 <- outcome_harvest_2$open_harvest_r3 / max_harvest
+outcome_harvest_2$rel_open_harvest_K1 <- outcome_harvest_2$open_harvest_K1 / max_harvest
+outcome_harvest_2$rel_open_harvest_K2 <- outcome_harvest_2$open_harvest_K2 / max_harvest
 
 outcome_harvest_2 <- outcome_harvest_2 %>%
   select(rel_open_harvest_notemp, rel_open_harvest_r1, rel_open_harvest_r2, rel_open_harvest_r3, rel_open_harvest_K1,
@@ -457,31 +457,31 @@ outcome_harvest_long$model_version <- factor(outcome_harvest_long$model_version,
 my_colors <- c("#000000", "#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00")
 
 
-#this is figure 3
+#this is figure 3 panels B and C
 p1 <- ggplot(outcome_combined_long %>% filter(area_mpa == 0), aes(x = fishing_p1, y = rel_biomass, color = model_version, linetype = model_version)) +
   geom_line(lwd = 1) +
   scale_color_manual(values = my_colors, name = "Model version") + 
-  scale_linetype_manual(values = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"), name = "Model version") +
+  scale_linetype_manual(values = c("solid", "dashed", "dashed", "dashed", "dotted", "dotted"), name = "Model version") +
   labs(x = "Fishing effort", y = "Biomass relative to optimal \nnonspatial management") +
   theme_minimal() +
   ggtitle("B.") +
   theme(text = element_text(size = 20), legend.position = "bottom") +
-  guides(color = guide_legend(override.aes = list(linetype = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"))),
+  guides(color = guide_legend(override.aes = list(linetype = c("solid", "dashed", "dashed", "dashed", "dotted", "dotted"))),
          linetype = guide_legend(override.aes = list(color = my_colors)))
 
 
 p2<-ggplot(outcome_harvest_long %>% filter(area_mpa == 0), aes(x=fishing_p1, y = rel_harvest, color=model_version, linetype = model_version)) +
   geom_line(lwd=1) +
   scale_color_manual(values = my_colors, name = "Model version") + 
-  scale_linetype_manual(values = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"), name = "Model version") +
+  scale_linetype_manual(values = c("solid", "dashed", "dashed", "dashed", "dotted", "dotted"), name = "Model version") +
   labs(x = "Fishing effort", y = "Harvest relative to optimal \nnonspatial management") +
   theme_minimal() +
   ggtitle("C.") +
   theme(text = element_text(size=20), legend.position = "bottom") +
-  guides(color = guide_legend(override.aes = list(linetype = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"))),
+  guides(color = guide_legend(override.aes = list(linetype = c("solid", "dashed", "dashed", "dashed", "dotted", "dotted"))),
          linetype = guide_legend(override.aes = list(color = my_colors)))
 
-ggarrange(p1, p2, nrow=1, ncol=2, common.legend = TRUE) # 8 x 4
+ggarrange(p1, p2, nrow=1, ncol=2, common.legend = TRUE) 
 
 
 #now with MPAs
@@ -501,19 +501,19 @@ custom_labels <- c(`0.05` = "5% spatial closure",
                    `0.5` = "50% spatial closure")
 
 
-#this is figure S4
+#this is figure S5
 ggplot(outcome_combined_long %>%
          filter(area_mpa %in% c(0.05, 0.1, 0.3, 0.5)),
        aes(x = fishing_p1, y = rel_biomass, col = model_version, linetype = model_version)) +
   geom_smooth(se = FALSE, lwd = 1) + 
   facet_wrap(~area_mpa, labeller = labeller(area_mpa = custom_labels)) +  # Use custom labels
   scale_color_manual(values = my_colors, name = "Model version") + 
-  scale_linetype_manual(values = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"), name = "Model version") +
+  scale_linetype_manual(values = c("solid", "dashed", "dashed", "dashed", "dotted", "dotted"), name = "Model version") +
   labs(x = "Fishing effort", y = "Biomass relative to optimal nonspatial management") +
   theme_minimal() +
   theme(text = element_text(size=20), legend.position = "bottom") +
   theme(plot.title = element_text(hjust = 0.5), text = element_text(size=20), legend.position = "bottom") +
-  guides(color = guide_legend(override.aes = list(linetype = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"))),
+  guides(color = guide_legend(override.aes = list(linetype = c("solid", "dashed", "dashed", "dashed", "dotted", "dotted"))),
          linetype = guide_legend(override.aes = list(color = my_colors))) #save 8x8
 
 
@@ -525,12 +525,12 @@ ggplot(outcome_harvest_long %>%
   geom_smooth(se = FALSE, lwd = 1) + 
   facet_wrap(~area_mpa, labeller = labeller(area_mpa = custom_labels)) +  # Use custom labels
   scale_color_manual(values = my_colors, name = "Model version") + 
-  scale_linetype_manual(values = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"), name = "Model version") +
+  scale_linetype_manual(values = c("solid", "dashed", "dashed", "dashed", "dotted", "dotted"), name = "Model version") +
   labs(x = "Fishing effort", y = "Harvest relative to optimal nonspatial management") +
   theme_minimal() +
   theme(text = element_text(size=20), legend.position = "bottom") +
   theme(plot.title = element_text(hjust = 0.5), text = element_text(size=20), legend.position = "bottom") +
-  guides(color = guide_legend(override.aes = list(linetype = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"))),
+  guides(color = guide_legend(override.aes = list(linetype = c("solid", "dashed", "dashed", "dashed", "dotted", "dotted"))),
          linetype = guide_legend(override.aes = list(color = my_colors))) #save 8x8
 
 

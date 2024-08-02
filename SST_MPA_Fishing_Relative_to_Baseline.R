@@ -443,12 +443,12 @@ my_colors <- c("#000000", "#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00")
 p3<-ggplot(outcome_combined_long %>% filter(area_mpa == 0), aes(x = fishing_p1, y = rel_biomass, color = model_version, linetype = model_version)) +
   geom_line(lwd = 1) +
   scale_color_manual(values = my_colors, name = "Model version") + 
-  scale_linetype_manual(values = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"), name = "Model version") +
+  scale_linetype_manual(values = c("solid", "dashed", "dashed", "dashed", "dotted", "dotted"), name = "Model version") +
   labs(x = "Fishing effort", y = "Biomass relative to baseline model") +
   theme_minimal() +
   ggtitle("A.") +
   theme(text = element_text(size = 20), legend.position = "bottom") +
-  guides(color = guide_legend(override.aes = list(linetype = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"))),
+  guides(color = guide_legend(override.aes = list(linetype = c("solid", "dashed", "dashed", "dashed", "dotted", "dotted"))),
          linetype = guide_legend(override.aes = list(color = my_colors)))
 
 
@@ -480,12 +480,12 @@ ggplot(outcome_combined_long %>%
   geom_smooth(se = FALSE, lwd = 1) + 
   facet_wrap(~area_mpa, labeller = labeller(area_mpa = custom_labels)) +  # Use custom labels
   scale_color_manual(values = my_colors, name = "Model version") + 
-  scale_linetype_manual(values = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"), name = "Model version") +
+  scale_linetype_manual(values = c("solid", "dashed", "dashed", "dashed", "dotted", "dotted"), name = "Model version") +
   labs(x = "Fishing effort", y = "Biomass relative to baseline model") +
   theme_minimal() +
   theme(text = element_text(size=20), legend.position = "bottom") +
   theme(plot.title = element_text(hjust = 0.5), text = element_text(size=20), legend.position = "bottom") +
-  guides(color = guide_legend(override.aes = list(linetype = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"))),
+  guides(color = guide_legend(override.aes = list(linetype = c("solid", "dashed", "dashed", "dashed", "dotted", "dotted"))),
          linetype = guide_legend(override.aes = list(color = my_colors)))#save 8x8
 
 

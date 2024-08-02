@@ -19,7 +19,7 @@ patch_area_grid$Var2 <- 1 - patch_area_grid$Var1
 patch_area_list <- split(patch_area_grid, 1:nrow(patch_area_grid))
 number_patches <- ncol(patch_area_grid)
 
-fishing_effort <- c(0.5, 0) #change to 0.5 for Figure S7 (high fishing effort)
+fishing_effort <- c(0.16, 0) #change to 0.5 for Figure S7 (high fishing effort)
 catchability <- 1
 
 parameter_grid <- expand.grid(patch_area = patch_area_list,
@@ -402,104 +402,22 @@ outcome_combined_long2$model_version <- factor(outcome_combined_long2$model_vers
 
 my_colors <- c("#000000", "#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00")
 
+#Figure S6 for low fishing, S7 for high fishing (edit fishing level at the beginning of script)
 ggplot(outcome_combined_long2,
        aes(x = area_mpa, y = rel_biomass, col = model_version, linetype = model_version)) +
   geom_line(lwd=1) +
   facet_wrap(~S, scales="free") +
   scale_color_manual(values = my_colors, name = "Model version") + 
-  scale_linetype_manual(values = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"), name = "Model version") +
+  scale_linetype_manual(values = c("solid", "dashed", "dashed", "dashed", "dotted", "dotted"), name = "Model version") +
   labs(x = "Spatial closure area (proportion)", y = "Biomass relative to baseline model") +
   theme_minimal() +
   theme(text = element_text(size=20), legend.position = "bottom") +
   scale_x_continuous(breaks=c(0, 0.25, 0.5, 0.75, 1),
                      labels = c("0", "0.25", "0.5", "0.75", "1")) +
-  guides(color = guide_legend(override.aes = list(linetype = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"))),
+  guides(color = guide_legend(override.aes = list(linetype = c("solid", "dashed", "dashed", "dashed", "dotted", "dotted"))),
          linetype = guide_legend(override.aes = list(color = my_colors)))
 
 
 
-
-
-#other relative method
-outcome_combined$rel_biomass_notemp <- outcome_combined$combined_fish_notemp / population_at_max_harvest
-outcome_combined$rel_biomass_r1 <- outcome_combined$combined_fish_r1 / population_at_max_harvest_r1
-outcome_combined$rel_biomass_r2 <- outcome_combined$combined_fish_r2 / population_at_max_harvest_r2
-outcome_combined$rel_biomass_r3 <- outcome_combined$combined_fish_r3 / population_at_max_harvest_r3
-outcome_combined$rel_biomass_K1 <- outcome_combined$combined_fish_K1 / population_at_max_harvest_K1
-outcome_combined$rel_biomass_K2 <- outcome_combined$combined_fish_K2 / population_at_max_harvest_K2
-
-outcome_combined <- outcome_combined %>%
-  select(rel_biomass_notemp, rel_biomass_r1, rel_biomass_r2, rel_biomass_r3, rel_biomass_K1,
-         rel_biomass_K2, S, area_mpa)
-
-
-outcome_combined_long <- pivot_longer(outcome_combined, rel_biomass_notemp:rel_biomass_K2, names_to = "model_version",
-                                      values_to = "rel_biomass")
-
-outcome_combined_long$model_version <- factor(outcome_combined_long$model_version, 
-                                              levels = c("rel_biomass_notemp", "rel_biomass_r1", "rel_biomass_r2", 
-                                                         "rel_biomass_r3", "rel_biomass_K1", "rel_biomass_K2"),
-                                              labels = c("Baseline", "r1", "r2", 
-                                                         "r3", "K1", "K2"))
-
-#Total Stock - Relative
-my_colors <- c("#000000", "#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00")
-
-ggplot(outcome_combined_long,
-       aes(x = area_mpa, y = rel_biomass, col = model_version, linetype = model_version)) +
-  geom_line(lwd=1) +
-  facet_wrap(~S, scales="free") +
-  scale_color_manual(values = my_colors, name = "Model version") + 
-  scale_linetype_manual(values = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"), name = "Model version") +
-  labs(x = "Spatial closure area (proportion)", y = "Biomass relative to optimal \nnonspatial management") +
-  theme_minimal() +
-  theme(text = element_text(size=20), legend.position = "bottom") +
-  scale_x_continuous(breaks=c(0, 0.25, 0.5, 0.75, 1),
-                     labels = c("0", "0.25", "0.5", "0.75", "1")) +
-  guides(color = guide_legend(override.aes = list(linetype = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"))),
-         linetype = guide_legend(override.aes = list(color = my_colors)))
-
-
-#HARVEST
-
-outcome_harvest_2 <- outcome_harvest %>%
-  select(open_harvest_notemp, open_harvest_r1, open_harvest_r2, open_harvest_r3, 
-         open_harvest_K1, open_harvest_K2,
-         S, area_mpa)
-
-outcome_harvest_2$rel_open_harvest_notemp <- outcome_harvest_2$open_harvest_notemp / max_harvest
-outcome_harvest_2$rel_open_harvest_r1 <- outcome_harvest_2$open_harvest_r1 / max_harvest_r1
-outcome_harvest_2$rel_open_harvest_r2 <- outcome_harvest_2$open_harvest_r2 / max_harvest_r2
-outcome_harvest_2$rel_open_harvest_r3 <- outcome_harvest_2$open_harvest_r3 / max_harvest_r3
-outcome_harvest_2$rel_open_harvest_K1 <- outcome_harvest_2$open_harvest_K1 / max_harvest_K1
-outcome_harvest_2$rel_open_harvest_K2 <- outcome_harvest_2$open_harvest_K2 / max_harvest_K2
-
-outcome_harvest_2 <- outcome_harvest_2 %>%
-  select(rel_open_harvest_notemp, rel_open_harvest_r1, rel_open_harvest_r2, rel_open_harvest_r3, rel_open_harvest_K1,
-         rel_open_harvest_K2, S, area_mpa)
-
-
-outcome_harvest_long <- pivot_longer(outcome_harvest_2, rel_open_harvest_notemp:rel_open_harvest_K2, names_to = "model_version",
-                                     values_to = "rel_harvest")
-
-outcome_harvest_long$model_version <- factor(outcome_harvest_long$model_version, 
-                                             levels = c("rel_open_harvest_notemp", "rel_open_harvest_r1", "rel_open_harvest_r2", 
-                                                        "rel_open_harvest_r3", "rel_open_harvest_K1", "rel_open_harvest_K2"),
-                                             labels = c("Baseline", "r1", "r2", 
-                                                        "r3", "K1", "K2"))
-
-ggplot(outcome_harvest_long,
-           aes(x = area_mpa, y = rel_harvest, col = model_version, linetype = model_version)) +
-  geom_line(lwd=1) +
-  facet_wrap(~S, scales="free") +
-  scale_color_manual(values = my_colors, name = "Model version") + 
-  scale_linetype_manual(values = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"), name = "Model version") +
-  labs(x = "Spatial closure area (proportion)", y = "Harvest relative to optimal \nnonspatial management") +
-  theme_minimal() +
-  theme(text = element_text(size=20), legend.position = "bottom") +
-  scale_x_continuous(breaks=c(0, 0.25, 0.5, 0.75, 1),
-                     labels = c("0", "0.25", "0.5", "0.75", "1")) +
-  guides(color = guide_legend(override.aes = list(linetype = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"))),
-         linetype = guide_legend(override.aes = list(color = my_colors)))
 
 

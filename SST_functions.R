@@ -23,10 +23,10 @@ curve(quad_r, from = -10, to = 10, xlab = "Anomaly (°C)", ylab = "Intrinsic gro
       col = 1, cex.lab = 1.5, cex.axis = 1.5, cex.main = 1.5, lwd = 2)
 
 curve(quad_r, from = -10, to = 10, xlab="Anomaly (°C)", ylab = "", col="#E41A1C", lty = "dashed", lwd = 4)
-curve(quad_r2, from = -10, to = 10, add = TRUE, col="#377EB8", lty = "dotted", lwd = 4)
-curve(quad_r3, from = -10, to = 10, add = TRUE, col="#4DAF4A", lty = "dotdash", lwd = 4)
+curve(quad_r2, from = -10, to = 10, add = TRUE, col="#377EB8", lty = "dashed", lwd = 4)
+curve(quad_r3, from = -10, to = 10, add = TRUE, col="#4DAF4A", lty = "dashed", lwd = 4)
 title(ylab= "Intrinsic growth rate", line=2, cex.lab=1.2)
-legend("topright", legend=c("r1", "r2", "r3"), col=c("#E41A1C", "#377EB8", "#4DAF4A"), lty=c("dashed", "dotted", "dotdash"), cex=1, text.width = 2, lwd = 4)
+legend("topright", legend=c("r1", "r2", "r3"), col=c("#E41A1C", "#377EB8", "#4DAF4A"), lty=c("dashed", "dashed", "dashed"), cex=1, text.width = 2, lwd = 4)
 
 
 scale_linetype_manual(values = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"), name = "Model version") +
@@ -37,8 +37,10 @@ scale_linetype_manual(values = c("solid", "dashed", "dotted", "dotdash", "longda
 ##Piecewise linear function for K
 # Define the linear equation
 linear_equation <- function(x) {
-  -4.95243768 * x +101.3
+  -4.95243768 * x + 101.3
 }
+
+
 
 # Create a function to restrict y between 10 and 101.3
 #10 g/m2 is maintained so matter how warm it gets (Darling et al. 2017)
@@ -79,15 +81,15 @@ y_values <- sapply(x_values, restricted_y)
 # Plot the function
 par(mar = c(5, 5, 4, 2) + 0.1)
 
-plot(x_values, y_values, type = "l", col = "#984EA3", lty="longdash", lwd = 4, cex.lab=1.2,
+plot(x_values, y_values, type = "l", col = "#984EA3", lty="dotted", lwd = 4, cex.lab=1.2,
      xlab = "Anomaly (°C)", ylab = bquote('Carrying capacity'~(g/m^2)))
 
 # Add the quad_K plot on top of the restricted_y plot
 # Plot the quad_K function
-curve(quad_K, from = -20, to = 20, add=TRUE, col = "#FF7F00", lty = "twodash", lwd = 4)
+curve(quad_K, from = -20, to = 20, add=TRUE, col = "#FF7F00", lty = "dotted", lwd = 4)
 
 # Add a legend
-legend("topright", legend = c("K1", "K2"), col = c("#984EA3", "#FF7F00"), lty = c("longdash", "twodash"), lwd = 4)
+legend("topright", legend = c("K1", "K2"), col = c("#984EA3", "#FF7F00"), lty = c("dotted", "dotted"), lwd = 4)
 
 
   

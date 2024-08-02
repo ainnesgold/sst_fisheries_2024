@@ -392,11 +392,11 @@ outcome_combined <- outcome_index %>%
 
 #alternative relative biomass calculations
 outcome_combined$rel_biomass_notemp <- outcome_combined$combined_fish_notemp / population_at_max_harvest
-outcome_combined$rel_biomass_r1 <- outcome_combined$combined_fish_r1 / population_at_max_harvest_r1
-outcome_combined$rel_biomass_r2 <- outcome_combined$combined_fish_r2 / population_at_max_harvest_r2
-outcome_combined$rel_biomass_r3 <- outcome_combined$combined_fish_r3 / population_at_max_harvest_r3
-outcome_combined$rel_biomass_K1 <- outcome_combined$combined_fish_K1 / population_at_max_harvest_K1
-outcome_combined$rel_biomass_K2 <- outcome_combined$combined_fish_K2 / population_at_max_harvest_K2
+outcome_combined$rel_biomass_r1 <- outcome_combined$combined_fish_r1 / population_at_max_harvest
+outcome_combined$rel_biomass_r2 <- outcome_combined$combined_fish_r2 / population_at_max_harvest
+outcome_combined$rel_biomass_r3 <- outcome_combined$combined_fish_r3 / population_at_max_harvest
+outcome_combined$rel_biomass_K1 <- outcome_combined$combined_fish_K1 / population_at_max_harvest
+outcome_combined$rel_biomass_K2 <- outcome_combined$combined_fish_K2 / population_at_max_harvest
 
 
 outcome_combined <- outcome_combined %>%
@@ -430,11 +430,11 @@ outcome_harvest_2 <- outcome_harvest_index %>%
          fishing_p1, area_mpa)
 
 outcome_harvest_2$rel_open_harvest_notemp <- outcome_harvest_2$open_harvest_notemp / max_harvest
-outcome_harvest_2$rel_open_harvest_r1 <- outcome_harvest_2$open_harvest_r1 / max_harvest_r1
-outcome_harvest_2$rel_open_harvest_r2 <- outcome_harvest_2$open_harvest_r2 / max_harvest_r2
-outcome_harvest_2$rel_open_harvest_r3 <- outcome_harvest_2$open_harvest_r3 / max_harvest_r3
-outcome_harvest_2$rel_open_harvest_K1 <- outcome_harvest_2$open_harvest_K1 / max_harvest_K1
-outcome_harvest_2$rel_open_harvest_K2 <- outcome_harvest_2$open_harvest_K2 / max_harvest_K2
+outcome_harvest_2$rel_open_harvest_r1 <- outcome_harvest_2$open_harvest_r1 / max_harvest
+outcome_harvest_2$rel_open_harvest_r2 <- outcome_harvest_2$open_harvest_r2 / max_harvest
+outcome_harvest_2$rel_open_harvest_r3 <- outcome_harvest_2$open_harvest_r3 / max_harvest
+outcome_harvest_2$rel_open_harvest_K1 <- outcome_harvest_2$open_harvest_K1 / max_harvest
+outcome_harvest_2$rel_open_harvest_K2 <- outcome_harvest_2$open_harvest_K2 / max_harvest
 
 outcome_harvest_2 <- outcome_harvest_2 %>%
   select(rel_open_harvest_notemp, rel_open_harvest_r1, rel_open_harvest_r2, rel_open_harvest_r3, rel_open_harvest_K1,
@@ -468,7 +468,7 @@ K_plot<-ggplot(rk_data %>% filter(model_version == "K1" | model_version == "K2")
        aes(x=year, y=value, color=model_version, linetype=model_version)) +
   geom_line(lwd = 1) +
   scale_color_manual(values = c("#984EA3", "#FF7F00"), name = "Model version") + 
-  scale_linetype_manual(values = c("longdash", "twodash"), name = "Model version") +
+  scale_linetype_manual(values = c("dotted", "dotted"), name = "Model version") +
   labs(x = "Year", y = expression(Carrying~capacity~(g/m^2))) +
   theme_minimal() +
   theme(text = element_text(size = 20), legend.position = "bottom") +
@@ -481,8 +481,8 @@ r_plot<-ggplot(rk_data %>% filter(model_version == "r1" | model_version == "r2" 
                aes(x=year, y=value, color=model_version, linetype=model_version)) +
   geom_line(lwd = 1) +
   scale_color_manual(values = c("#E41A1C", "#377EB8", "#4DAF4A"), name = "Model version") + 
-  scale_linetype_manual(values = c("dashed", "dotted", "dotdash"), name = "Model version") +
-  labs(x = "Year", y = "Instrinsic growth rate") +
+  scale_linetype_manual(values = c("dashed", "dashed", "dashed"), name = "Model version") +
+  labs(x = "Year", y = "Intrinsic growth rate") +
   theme_minimal() +
   theme(text = element_text(size = 20), legend.position = "bottom") +
   guides(color = guide_legend(override.aes = list(linetype = c("dashed", "dotted", "dotdash"))),
