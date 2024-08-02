@@ -439,7 +439,7 @@ outcome_harvest_long$model_version <- factor(outcome_harvest_long$model_version,
 my_colors <- c("#000000", "#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00")
 
 
-#this would be added to figure 3
+#Figure 3A
 p3<-ggplot(outcome_combined_long %>% filter(area_mpa == 0), aes(x = fishing_p1, y = rel_biomass, color = model_version, linetype = model_version)) +
   geom_line(lwd = 1) +
   scale_color_manual(values = my_colors, name = "Model version") + 

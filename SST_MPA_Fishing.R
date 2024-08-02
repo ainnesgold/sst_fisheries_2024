@@ -370,7 +370,6 @@ outcome_harvest$fishing_p2 <- map_dbl(outcome_harvest$fishing_effort, 2)
 biomass_mapping <- data.frame(
   fishing_p1 = unique(outcome$fishing_p1)
 )
-#biomass_mapping$optimal_biomass <- optimal_biomass
 
 outcome_index <- merge(outcome, biomass_mapping, by = "fishing_p1")
 
@@ -421,14 +420,11 @@ harvest_mapping <- data.frame(
   fishing_p1 = unique(outcome$fishing_p1)
 )
 
-#harvest_mapping$optimal_harvest <- optimal_harvest
-
 outcome_harvest_index <- merge(outcome_harvest, harvest_mapping, by = "fishing_p1")
 
 outcome_harvest_2 <- outcome_harvest_index %>%
   select(open_harvest_notemp, open_harvest_r1, open_harvest_r2, open_harvest_r3, 
          open_harvest_K1, open_harvest_K2,
-         #optimal_harvest,
          fishing_p1, area_mpa)
 
 outcome_harvest_2$rel_open_harvest_notemp <- outcome_harvest_2$open_harvest_notemp / max_harvest
@@ -483,6 +479,14 @@ p2<-ggplot(outcome_harvest_long %>% filter(area_mpa == 0), aes(x=fishing_p1, y =
 
 ggarrange(p1, p2, nrow=1, ncol=2, common.legend = TRUE) 
 
+# Assuming outcome_harvest_long is your dataframe
+highest_harvest <- outcome_harvest_long %>%
+  filter(area_mpa == 0) %>%
+  group_by(model_version) %>%
+  filter(rel_harvest == max(rel_harvest)) %>%
+  select(model_version, fishing_p1, rel_harvest)
+
+highest_harvest
 
 #now with MPAs
 

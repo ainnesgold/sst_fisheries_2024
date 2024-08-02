@@ -357,8 +357,6 @@ outcome_harvest$area_mpa <- map_dbl(outcome_harvest$patch_area, 2)
 
 
 #######################. BIOMASS. ##################################
-#optimal_biomass <- outcome %>% filter(area_mpa == 0 & fishing_p1 == optimal_fishing_effort) %>%
-# summarize(open_fish_notemp, open_fish_r1, open_fish_r2, open_fish_r3, open_fish_K1, open_fish_K2)
 
 outcome_index <- outcome
 

@@ -419,7 +419,6 @@ harvest_mapping <- data.frame(
   fishing_p1 = unique(outcome$fishing_p1)
 )
 
-#harvest_mapping$optimal_harvest <- optimal_harvest
 
 outcome_harvest_index <- merge(outcome_harvest, harvest_mapping, by = "fishing_p1")
 
